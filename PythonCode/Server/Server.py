@@ -4,6 +4,8 @@ class Server:
     def __init__(self,serverIp:str,port:int):
         self.serverIp = serverIp
         self.port = port
+        self._conn = None
+        self._addr = None
 
     def connect(self):
         print("Server IP Address: ",self.serverIp,"\nPORT: ",self.port)

@@ -12,12 +12,13 @@ server.connect()
 ard_port = "COM3"
 baud_rate = 9600
 arduino = Arduino(ard_port,baud_rate)
+arduino.connect()
 
 while True:
     data = server.receive()
     if(not data):
         print("System Stopped!!")
         break
-    arduino.send(data)
-# server.close()
+    # arduino.send(data)
+server.close()
 
