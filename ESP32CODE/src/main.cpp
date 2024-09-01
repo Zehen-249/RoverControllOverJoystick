@@ -1,5 +1,4 @@
 #include <WiFi.h>
-#include <WebServer.h>
 #include <WiFiUdp.h>
 #include <ArduinoJson.h> // Include the ArduinoJson library
 #include "controll.h"
@@ -8,7 +7,6 @@ const char *ssid = "POCO M4 Pro";
 const char *password = "PocoPro4";
 int newSpeed = 0;
 
-WebServer server(80);
 WiFiUDP udp;
 unsigned int localUdpPort = 12345; // Same port as in the Python script
 char incomingPacket[255];          // Buffer for incoming packets
@@ -24,8 +22,8 @@ Rover rover = {
     .left_b_DIR = 14,
     .right_b_pwm = 12,
     .right_b_DIR = 13,
-    .speed = 0,
-    .speedLimit = 200};
+    .speed = 0
+  };
 
 void setup()
 {
@@ -48,6 +46,7 @@ void setup()
 
 void loop()
 {
+  run(&rover);
   // Check for incoming UDP packets
   int packetSize = udp.parsePacket();
   if (packetSize)
@@ -58,7 +57,7 @@ void loop()
       incomingPacket[len] = 0;
     }
 
-    Serial.printf("Received packet: %s\n", incomingPacket);
+    // Serial.printf("Received packet: %s\n", incomingPacket);
 
     // Parse the incoming JSON data
     DynamicJsonDocument doc(1024);
@@ -75,26 +74,26 @@ void loop()
 
       if (newSpeed != rover.speed)
       {
-        if (newSpeed > rover.speed)
+        if (newSpeed > rover.speed && (newSpeed - rover.speed > 5))
         {
           while (rover.speed < newSpeed)
           {
             rover.speed++;
             set_speed(&rover, rover.speed);
-            delay(5);
+            run(&rover);
           }
         }
-        else
+        else if (newSpeed < rover.speed && (rover.speed - newSpeed > 5))
         {
           while (rover.speed > newSpeed)
           {
             rover.speed--;
             set_speed(&rover, rover.speed);
-            delay(5);
-                    }
+            run(&rover);
+          }
         }
       }
-      Serial.printf("DIR %s Speed %d\n",DIR,rover.speed);
+      // Serial.printf("DIR %s Speed %d\n",DIR,rover.speed);
       
     }
     else
@@ -102,5 +101,4 @@ void loop()
       Serial.println("Failed to parse JSON");
     }
   }
-  run(&rover);
 }

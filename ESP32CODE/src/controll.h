@@ -15,38 +15,37 @@ typedef struct Rover
     uint8_t right_b_DIR;
 
     int speed;
-    int speedLimit;
 
 } Rover;
 
 void Forward(const Rover *rover)
 {
-    digitalWrite(rover->left_f_DIR, HIGH);
+    digitalWrite(rover->left_f_DIR, LOW);
     digitalWrite(rover->right_f_DIR, LOW);
     digitalWrite(rover->left_b_DIR, HIGH);
-    digitalWrite(rover->right_b_DIR, LOW);
+    digitalWrite(rover->right_b_DIR, HIGH);
 }
 void Backward(const Rover *rover)
 {
-    digitalWrite(rover->left_f_DIR, LOW);
+    digitalWrite(rover->left_f_DIR, HIGH);
     digitalWrite(rover->right_f_DIR, HIGH);
     digitalWrite(rover->left_b_DIR, LOW);
-    digitalWrite(rover->right_b_DIR, HIGH);
+    digitalWrite(rover->right_b_DIR, LOW);
 }
 
 void Right(const Rover *rover)
 {
-    digitalWrite(rover->left_f_DIR, HIGH);
+    digitalWrite(rover->left_f_DIR, LOW);
     digitalWrite(rover->right_f_DIR, HIGH);
     digitalWrite(rover->left_b_DIR, HIGH);
-    digitalWrite(rover->right_b_DIR, HIGH);
+    digitalWrite(rover->right_b_DIR, LOW);
 }
 void Left(const Rover *rover)
 {
-    digitalWrite(rover->left_f_DIR, LOW);
+    digitalWrite(rover->left_f_DIR, HIGH);
     digitalWrite(rover->right_f_DIR, LOW);
     digitalWrite(rover->left_b_DIR, LOW);
-    digitalWrite(rover->right_b_DIR, LOW);
+    digitalWrite(rover->right_b_DIR, HIGH);
 }
 
 void set_dir(String DIR, const Rover *rover)
@@ -60,17 +59,18 @@ void set_dir(String DIR, const Rover *rover)
     }else if(DIR == "RIGHT"){
         Right(rover);
     }
+
 }
 void set_speed(Rover *rover, int speed)
 {
-    if (speed < 0)
-    {
-        speed = -speed;
-    }
-    else if (speed > rover->speedLimit)
-    {
-        speed = rover->speedLimit;
-    }
+    // if (speed < 0)
+    // {
+    //     speed = -speed;
+    // }
+    // else if (speed > rover->speedLimit)
+    // {
+    //     speed = rover->speedLimit;
+    // }
     rover->speed = speed;
 }
 void run(const Rover *rover){
@@ -78,6 +78,7 @@ void run(const Rover *rover){
     analogWrite(rover->left_f_pwm, rover->speed);
     analogWrite(rover->right_b_pwm, rover->speed);
     analogWrite(rover->right_f_pwm, rover->speed);
+    Serial.printf("Running with %d speed\n",rover->speed);
 }
 void make_setup(const Rover *rover)
 {

@@ -39,7 +39,7 @@ class Controller:
     def get_axis_motion(self,event):
         max_speed = 200
         axis = event.axis
-        value = (event.value)
+        value = round((event.value),2)
         if(axis == 1):
             if(value<-3.051e-5):
                 data=f"Left speed {(abs(int(value*max_speed)))}"
