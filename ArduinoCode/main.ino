@@ -22,7 +22,7 @@ void loop() {
   if(Serial.available()>0){
     println(Serial.read())
   }
-  Forward(&myRover);
-  set_speed(&myRover, 50);
+  Forward(&rover);
+  set_speed(&rover, 50);
 
 }
